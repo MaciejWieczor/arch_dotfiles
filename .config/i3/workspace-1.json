@@ -1,0 +1,21 @@
+{
+    "border": "pixel",
+    "current_border_width": 5,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 1015,
+       "width": 1890,
+       "x": 15,
+       "y": 50
+    },
+    "marks": [],
+    "name": "GitHub - MaciejWieczor/milton at linux_stylus_buttons - Opera",
+    "percent": 1,
+    "swallows": [
+       {
+        "class": "^Chromium$",
+       }
+    ],
+    "type": "con"
+}
+

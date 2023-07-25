@@ -1,0 +1,20 @@
+{
+    "border": "pixel",
+    "current_border_width": 5,
+    "floating": "user_off",
+    "geometry": {
+       "height": 504,
+       "width": 640,
+       "x": 0,
+       "y": 0
+    },
+    "marks": [],
+    "percent": 1,
+    "swallows": [
+       {
+            "title": "nvim"
+       }
+    ],
+    "type": "con"
+}
+
