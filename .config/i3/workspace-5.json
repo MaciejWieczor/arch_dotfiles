@@ -3,16 +3,17 @@
     "current_border_width": 5,
     "floating": "auto_off",
     "geometry": {
-       "height": 1020,
+       "height": 1010,
        "width": 1890,
-       "x": 15,
-       "y": 45
+       "x": 0,
+       "y": 0
     },
     "marks": [],
+    "name": "Easy Effects",
     "percent": 1,
     "swallows": [
        {
-        "title": "neomutt"
+        "class": "^easyeffects$"
        }
     ],
     "type": "con"

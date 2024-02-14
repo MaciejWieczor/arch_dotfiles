@@ -37,6 +37,7 @@ bindsym $mod+Shift+q kill
 # A more modern dmenu replacement is rofi:
 # Mod + d
 bindcode $mod+40 exec "/home/maciej/.config/rofi/launchers/type-6/launcher.sh"
+bindsym $mod+c exec "rofimoji -a copy --selector-args='-theme /home/maciej/.config/rofi/launchers/type-4/style-2.rasi'"
 
 # change focus
 bindsym $mod+j focus left
@@ -97,12 +98,12 @@ bindsym $mod+a focus parent
 set $ws1 "1 󰖟"
 set $ws2 "2 "
 set $ws3 "3 "
-set $ws4 "4"
-set $ws5 "5"
+set $ws4 "4 "
+set $ws5 "5 "
 # set $ws3 "3 "
 # set $ws4 "4 "
 # set $ws5 "5 󱌣"
-set $ws6 "6"
+set $ws6 "6 "
 set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
@@ -140,10 +141,17 @@ bindsym $mod+Shift+r restart
 # bindsym $mod+Shift+d exec feh --bg-fill ~/Obrazy/wallpapers/1.png
 # bindsym $mod+Shift+n exec feh --bg-fill ~/Obrazy/wallpapers/3.png
 # bindsym $mod+Shift+m exec feh --bg-fill ~/Obrazy/wallpapers/2.png
-bindsym $mod+mod1+1 exec feh --bg-fill ~/Obrazy/wallpapers/1.png
-bindsym $mod+mod1+2 exec feh --bg-fill ~/Obrazy/wallpapers/2.png
-bindsym $mod+mod1+3 exec feh --bg-fill ~/Obrazy/wallpapers/3.png
-bindsym $mod+mod1+4 exec feh --bg-fill ~/Obrazy/wallpapers/4.png
+bindsym $mod+mod1+1 exec ~/.scripts/wallpaper_long.sh
+bindsym $mod+mod1+2 exec feh --bg-fill ~/Obrazy/wallpapers/1.png -g +500
+bindsym $mod+mod1+3 exec feh --bg-fill ~/Obrazy/wallpapers/1.png -g +1000
+bindsym $mod+mod1+4 exec feh --bg-fill ~/Obrazy/wallpapers/1.png -g +1500
+bindsym $mod+mod1+5 exec feh --bg-fill ~/Obrazy/wallpapers/1.png -g +2000
+bindsym $mod+mod1+6 exec feh --bg-fill ~/Obrazy/wallpapers/1.png -g +2500
+bindsym $mod+mod1+7 exec feh --bg-fill ~/Obrazy/wallpapers/1.png -g +3000
+bindsym $mod+plus exec ~/.scripts/wallpaper_move.sh + 30
+bindsym $mod+minus exec ~/.scripts/wallpaper_move.sh - 30
+# bindsym $mod+mod1+8 exec feh --bg-fill ~/Obrazy/wallpapers/8.png -g +3200
+# bindsym $mod+mod1+9 exec feh --bg-fill ~/Obrazy/wallpapers/9.png
 
 mode "  Wacom" {
         bindsym 1 exec xsetwacom set 22 MapToOutput 1920x1080+0+0; \
@@ -161,9 +169,10 @@ mode "⏻ Power" {
         bindsym 2 exec "~/.config/i3/dunst_countdown.sh hibernate; systemctl hibernate"
         bindsym 3 exec "~/.config/i3/dunst_countdown.sh suspend; systemctl suspend"
         bindsym 4 exec "~/.config/i3/dunst_countdown.sh reboot; reboot"
-        bindsym 5 exec "shutdown -h 44; dunstctl close-all ; dunstify 'Komputer zostanie wyłączony za 44 minuty!'"
-        bindsym 6 exec "shutdown -h 33; dunstctl close-all ; dunstify 'Komputer zostanie wyłączony za 33 minuty!'"
-        bindsym 7 exec "shutdown -c; dunstctl close-all ; dunstify 'Anulowanie komendy wyłączania'"
+        bindsym 5 exec "shutdown -h 48; dunstctl close-all ; dunstify 'Komputer zostanie wyłączony za 48 minut!'"
+        bindsym 6 exec "shutdown -h 44; dunstctl close-all ; dunstify 'Komputer zostanie wyłączony za 44 minuty!'"
+        bindsym 7 exec "shutdown -h 33; dunstctl close-all ; dunstify 'Komputer zostanie wyłączony za 33 minuty!'"
+        bindsym 8 exec "shutdown -c; dunstctl close-all ; dunstify 'Anulowanie komendy wyłączania'"
         bindsym 0 exec ~/.config/i3/dunst_power.sh
 
         bindsym Return mode "default"
@@ -176,6 +185,7 @@ bindsym $mod+p mode "⏻ Power"
 mode "Photo" {
         bindsym 0 exec "dunstify -h string:x-dunst-stack-tag:test 1 'Screenshot z zaznaczeniem'"
         bindsym 1 exec "~/.scripts/ssarea.sh"
+        bindsym 2 exec "~/.scripts/ssarea_name.sh"
 
         bindsym Return mode "default"
         bindsym Escape mode "default"
@@ -245,15 +255,29 @@ bindcode $mod+31 mode " Language"
 
 exec --no-startup-id picom
 
-exec_always ~/.config/polybar/launch_tm.sh
+# exec_always ~/.config/polybar/launch.sh
+bar {
+	position top
+	font pango:Font Awesome 5 Free 15
+	font pango:terminal-font 11
+	workspace_min_width 50
+	status_command exec /home/maciej/.config/i3status/mybar.sh
+
+        colors {
+                focused_workspace      #363a4f #8aadf4 #181926
+                inactive_workspace      #363a4f #24273a	#a5adcb
+                urgent_workspace        #363a4f #ED8796 #181926
+
+        }
+}
 
 for_window [class=".*"] border pixel 5
 gaps inner 10
-gaps top 35
+# gaps top 40
 
 # exec_always xrandr --output eDP1 --auto --output HDMI-1-0 --auto --left-of eDP1
 exec_always --no-startup-id x-on-resize --config ~/.config/i3/script.sh 
-exec feh --bg-fill ~/Obrazy/wallpapers/1.png
+exec source ~/.scripts/wallpaper_long.sh
 
 # exec_always xwinwrap -g 1920x1080 -ov -ni -s -nf -- gifview -w WID ~/Pictures/blue_city2.gif -a
 # two screen version
@@ -278,22 +302,32 @@ exec_always xidlehook --not-when-audio \
 
 for_window [class="mpv"] floating enable
 for_window [floating] resize set 900 500
+mouse_warping none
+no_focus [class="chromium"]
+no_focus [class="Chromium"]
+focus_on_window_activation none
 
 exec --no-startup-id "i3-msg 'workspace 1; append_layout ~/.config/i3/workspace-1.json'"
 exec --no-startup-id "i3-msg 'workspace 2; append_layout ~/.config/i3/workspace-2.json'"
 exec --no-startup-id "i3-msg 'workspace 3; append_layout ~/.config/i3/workspace-3.json'"
-# exec --no-startup-id "i3-msg 'workspace 4; append_layout ~/.config/i3/workspace-4.json'"
-# exec --no-startup-id "i3-msg 'workspace 5; append_layout ~/.config/i3/workspace-5.json'"
+exec --no-startup-id "i3-msg 'workspace 4; append_layout ~/.config/i3/workspace-4.json'"
+exec --no-startup-id "i3-msg 'workspace 5; append_layout ~/.config/i3/workspace-5.json'"
+exec --no-startup-id "i3-msg 'workspace 6; append_layout ~/.config/i3/workspace-6.json'"
 
 exec --no-startup-id chromium
+exec --no-startup-id easyeffects
+exec --no-startup-id thunderbird
 
-exec --no-startup-id i3-msg 'exec alacritty -T nvim' 
+exec --no-startup-id i3-msg 'exec alacritty -T nvim'
+exec --no-startup-id i3-msg 'exec alacritty -T notes --hold -e nvim /home/maciej/Vimwiki/strona-główna.md'
 # exec --no-startup-id i3-msg 'exec alacritty -T neomutt --hold -e neomutt -F /home/maciej/.config/mutt/.muttrc' 
 
 # exec --no-startup-id i3-msg 'exec alacritty -T btop --hold -e btop'
 # exec --no-startup-id i3-msg 'exec alacritty -T wttr --hold -e ~/.wttr/.wttr_script.sh'
 
-exec --no-startup-id obsidian
+exec --no-startup-id calibre
+#
+# exec --no-startup-id easyeffects
 
 exec i3-msg 'workspace 1'
 
@@ -302,6 +336,7 @@ exec i3-msg 'workspace 1'
 
 exec --no-startup-id i3-msg "rename workspace 1 to 1 󰖟"
 exec --no-startup-id i3-msg "rename workspace 2 to 2 "
-# exec --no-startup-id i3-msg "rename workspace 3 to 3 "
 exec --no-startup-id i3-msg "rename workspace 3 to 3 "
-# exec --no-startup-id i3-msg "rename workspace 5 to 5 󱌣"
+exec --no-startup-id i3-msg "rename workspace 4 to 4 "
+exec --no-startup-id i3-msg "rename workspace 5 to 5 "
+exec --no-startup-id i3-msg "rename workspace 6 to 6 "
