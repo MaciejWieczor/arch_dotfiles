@@ -1,0 +1,15 @@
+WIKIDIR=$HOME"/Vimwiki"
+OLD_DIR=$PWD
+
+cd $WIKIDIR
+
+find ./ -iname "*.md" -type f -exec sh -c 'pandoc "${0}" -s \
+							--mathjax \
+							--template toc-sidebar.html \
+							--toc -B nav \
+							-c /markdown-preview.css \
+							-o "${0%.md}.html"' {} \;
+
+~/bin/convert_links.py $WIKIDIR
+
+cd $OLD_DIR
