@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# if we're not in Vimwiki bail out
+if [[ $1 != *"/home/maciej/Vimwiki"* ]]; then
+  return 0;
+fi
+
+# convert the given file to html
+pandoc --standalone\
+	"${1}" \
+	-f markdown \
+	-t html \
+	-o "${1%.md}.html" \
+	--mathjax \
+	--template toc-sidebar.html \
+	--toc -B nav \
+	--css=/markdown-preview.css;
+
+# strip md extension from filename
+HTML_FILE="${1%.md}.html"
+
+# convert links in the html file so it points to other html stuff and not
+# markdown
+~/bin/convert_single_links.py "/home/maciej/Vimwiki" $HTML_FILE
+
+# if last file is displayed then just refresh
+LAST_FILE=$(cat /home/maciej/.scripts/LAST_VIMWIKI_FILE)
+if [[ $LAST_FILE == $HTML_FILE ]]; then
+	i3-msg "focus right";
+	xdotool key F5;
+	i3-msg "focus left"
+	exit;
+fi
+
+# otherwise input the new file into the URL bar
+WIKI_PATH="0.0.0.0:8000"${HTML_FILE#/home/maciej/Vimwiki}
+
+# open the url bar and write the new path
+i3-msg "focus right";
+xdotool keydown ctrl key l;
+xdotool keyup ctrl;
+xdotool type "${WIKI_PATH}";
+xdotool key Enter;
+i3-msg "focus left"
+
+# then save the new file name into the file
+echo $HTML_FILE > /home/maciej/.scripts/LAST_VIMWIKI_FILE
