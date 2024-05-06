@@ -1,0 +1,29 @@
+# [Created by task 3.0.2 4/28/2024 01:43:11]
+
+# Sort
+report.list.sort=project+/,start-,due+,urgency-
+report.next.sort=project+/,start-,due+,urgency-
+
+# Files
+data.location=/home/maciej/.task
+
+# --------------------------------------
+# Theme
+include dark-gray-blue-256.theme
+
+# --------------------------------------
+# Color overrides
+## Project colors
+color.project.Dom=black on yellow
+color.project.Muzyka=black on green
+color.project.Komputer=black on blue
+color.project.Czytanie=black on magenta
+
+# --------------------------------------
+## Others
+color.due=black on red
+color.active=black on white
+
+# --------------------------------------
+# Macros
+#    = :!wr echo do something
