@@ -36,7 +36,7 @@ bindsym $mod+Shift+q kill
 
 # A more modern dmenu replacement is rofi:
 # Mod + d
-bindcode $mod+40 exec "/home/maciej/.config/rofi/launchers/type-6/launcher.sh"
+bindcode $mod+40 exec "/home/maciej/.config/rofi/launchers/type-2/launcher.sh"
 bindsym $mod+c exec "rofimoji -a copy --selector-args='-theme /home/maciej/.config/rofi/launchers/type-4/style-2.rasi'"
 
 # change focus
@@ -239,8 +239,10 @@ bindsym $mod+r mode " Resize"
 
 # language picker mode
 mode " Language" {
-        bindcode 10 exec setxkbmap pl
-        bindcode 11 exec setxkbmap il
+        bindcode 10 exec setxkbmap pl;
+        bindcode 11 exec setxkbmap il;
+        bindcode 12 exec setxkbmap ua;
+        bindcode 13 exec setxkbmap ru;
         bindsym 0 exec ~/.config/i3/dunst_language.sh
         bindcode $mod+31 mode "default"
 # change focus
@@ -255,25 +257,25 @@ bindcode $mod+31 mode " Language"
 
 exec --no-startup-id picom
 
-# exec_always ~/.config/polybar/launch.sh
-bar {
-	position top
-	font pango:Font Awesome 5 Free 15
-	font pango:terminal-font 11
-	workspace_min_width 50
-	status_command exec /home/maciej/.config/i3status/mybar.sh
-
-        colors {
-                focused_workspace      #363a4f #8aadf4 #181926
-                inactive_workspace      #363a4f #24273a	#a5adcb
-                urgent_workspace        #363a4f #ED8796 #181926
-
-        }
-}
+exec_always ~/.config/polybar/launch.sh
+# bar {
+# 	position top
+# 	font pango:Font Awesome 5 Free 15
+# 	font pango:terminal-font 11
+# 	workspace_min_width 50
+# 	status_command exec /home/maciej/.config/i3status/mybar.sh
+#
+#         colors {
+#                 focused_workspace      #363a4f #8aadf4 #181926
+#                 inactive_workspace      #363a4f #24273a	#a5adcb
+#                 urgent_workspace        #363a4f #ED8796 #181926
+#
+#         }
+# }
 
 for_window [class=".*"] border pixel 5
 gaps inner 10
-# gaps top 40
+gaps top 30
 
 # exec_always xrandr --output eDP1 --auto --output HDMI-1-0 --auto --left-of eDP1
 exec_always --no-startup-id x-on-resize --config ~/.config/i3/script.sh 
