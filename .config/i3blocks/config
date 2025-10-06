@@ -1,0 +1,32 @@
+[timer]
+command=./timer.sh
+signal=3
+
+[mpd]
+command=./mpd.sh
+interval=5
+signal=10
+
+# flags
+[perf_prof]
+command=./performance.sh
+interval=5
+# end flags
+
+[light]
+command=./light.sh
+interval=once
+signal=10
+
+[sound]
+command=./sound.sh
+interval=once
+signal=10
+
+[battery]
+command=./battery.sh
+interval=10
+
+[date]
+command=./date.sh
+interval=1
