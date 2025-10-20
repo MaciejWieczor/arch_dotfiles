@@ -154,7 +154,7 @@ timer_stop () {
 }
 
 timer_menu () {
-		CHOICE=$(printf "󱎫 timer start\\n󱎬 timer stop\\n󰈆 exit" | dmenu -fn 'Iosevka Nerd Font-14' -c -l 4 -i)
+		CHOICE=$(printf "󱎫 rozpocznij minutnik\\n󱎬 zatrzymaj minutnik\\n󰈆 wyjście" | dmenu -fn 'Iosevka Nerd Font-14' -c -l 4 -i)
 		case "$CHOICE" in
 			*󱎫*) timer_start ;;
 			*󱎬*) timer_stop ;;
@@ -162,10 +162,80 @@ timer_menu () {
 		esac
 }
 
+DIRECTORY=~/Pictures
+
+transfer () { # pull photos from sd card into a folder for today's date
+
+	mount() { # Check if the card is mounted
+			sudo mount /dev/sda1 /mnt/sdcard && notify-send "SD zamontowane."
+			[ -d /mnt/sdcard/DCIM/ ] || notify-send "SD nie zamontowane."
+
+	}
+
+	unmount() { # Unmount card
+			sudo umount /mnt/sdcard && notify-send "SD odmontowane"
+	}
+
+	dt() { # Open darktable to import today's photos
+			sudo umount /mnt/sdcard && notify-send "SD odmontowane, otwieranie Darktable"
+			(darktable "$DIRECTORY$(date '+%b_%d')") &
+	}
+
+	postrun() { # Menu to select what I want to do after photos have been transferred
+			notify-send "Zdjęcia przerzucono."
+			choice=$(printf "Odmontuj SD\\nOtwórz Darktable, odmontuj\\nNic nie rób" | dmenu -fn 'Iosevka Nerd Font-14' -c -l 3 -i -p "Zdjęcia zrzucono: ")
+			case "$choice" in
+					Odmontuj*) unmount;;
+					Otwórz*) dt;;
+					Nic*) exit 0;;
+			esac
+	}
+
+	auto() { # Transfer photos from SD card into a directory for today's date
+			[ -d /mnt/sdcard/DCIM/ ] || mount
+			notify-send "Przerzucanie zdjęć rozpoczęte..."
+
+			mkdir -p "$DIRECTORY/$(date '+%b_%d')"
+			find /mnt/sdcard -type f -name "*.NEF" -exec mv -nv {} "$DIRECTORY/$(date '+%b_%d')/" \; && postrun
+	}
+
+	case "$1" in
+			mount) mount ;;
+			unmount) unmount ;;
+			dt) dt ;;
+			*) auto ;;
+	esac
+}
+
+opendir () { # fuzzy find a dir to open in Darktable
+		CHOICE=$(echo -e "Wpisz ścieżkę...\n$(command ls -t1 $DIRECTORY)" | dmenu -fn 'Iosevka Nerd Font-14' -c -l 10 -i -p "Directory: ") || exit 0
+				case $CHOICE in
+						*Wpisz*) PHOTODIR="$(echo "" | dmenu -fn 'Iosevka Nerd Font-14' -c -p "󰄄 Open: " <&-)" || exit 0 ;;
+						*) PHOTODIR=$DIRECTORY/$CHOICE ;;
+				esac
+
+		darktable $PHOTODIR
+}
+
+photo_menu () {
+		CHOICE=$(printf "󱁥 zrzuć zdjęcia z SD\\n otwórz folder w darktable\\n󰈆 wyjście" | dmenu -fn 'Iosevka Nerd Font-14' -c -l 4 -i)
+		case "$CHOICE" in
+			*󱁥*) transfer ;;
+			**) opendir ;;
+			*󰈆*) exit ;;
+		esac
+}
+
+notatki () {
+	~/.scripts/dmenu_notes.sh
+}
+
 menu() {
-		CHOICE=$(printf "󱎫 timer\\n󰈆 exit" | dmenu -fn 'Iosevka Nerd Font-14' -c -l 4 -i)
+		CHOICE=$(printf "󱎫 minutnik\\n menu zdjęć\\n notatki\\n󰈆 wyjście" | dmenu -fn 'Iosevka Nerd Font-14' -c -l 4 -i)
 		case "$CHOICE" in
 			*󱎫*) timer_menu ;;
+			**) photo_menu ;;
+			**) notatki ;;
 			*󰈆*) exit ;;
 		esac
 }
