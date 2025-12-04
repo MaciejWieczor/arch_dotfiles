@@ -1,5 +1,13 @@
+[shutdown_timer]
+command=./stopwatch.sh
+signal=3
+
+[shutdown_timer]
+command=./timer.sh ranczo
+signal=3
+
 [timer]
-command=./timer.sh
+command=./timer.sh minutnik
 signal=3
 
 [mpd]
